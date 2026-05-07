@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { NavAuth } from "@/components/NavAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/hackathons" className="hover:text-white transition-colors">Hackathons</Link>
               <Link href="/leaderboard" className="hover:text-white transition-colors">Leaderboard</Link>
             </div>
+            <NavAuth />
           </div>
         </nav>
         <main>{children}</main>
