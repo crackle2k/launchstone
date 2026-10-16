@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="launchstone"
+version="0.1.0"
+displayName="Launchstone Companion"
+authors="Crackle2K"
+description='''Connects a Forge dedicated server to the Launchstone desktop app.'''
+displayTest="IGNORE_ALL_VERSION"
+
+[[dependencies.launchstone]]
+modId="forge"
+mandatory=true
+versionRange="[47.4.0,48)"
+ordering="NONE"
+side="SERVER"
+
+[[dependencies.launchstone]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1]"
+ordering="NONE"
+side="SERVER"

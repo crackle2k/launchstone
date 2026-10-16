@@ -1,31 +1,42 @@
 {
   "name": "launchstone",
+  "version": "0.2.0",
   "private": true,
-  "version": "0.1.0",
+  "description": "Shared Minecraft worlds, hosted by the people playing.",
   "type": "module",
+  "main": "out/main/main.js",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri",
-    "start": "powershell -ExecutionPolicy Bypass -File dev.ps1"
+    "dev": "electron-vite dev",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && electron-vite build",
+    "test": "vitest run",
+    "package": "npm run build && node scripts/package.mjs",
+    "test:desktop": "node scripts/smoke.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.17.0"
+    "lucide-react": "1.58.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.0",
-    "@tauri-apps/cli": "^2",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
-    "lucide-react": "^1.17.0",
-    "tailwindcss": "^4.3.0",
-    "typescript": "~5.8.3",
-    "vite": "^7.0.4"
+    "@electron/packager": "20.3.0",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "electron": "44.8.0",
+    "electron-vite": "6.0.0",
+    "playwright": "1.64.1",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=24 <25"
   }
 }

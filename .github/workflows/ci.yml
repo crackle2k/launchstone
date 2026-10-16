@@ -1,0 +1,36 @@
+name: Build and test
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  desktop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: xvfb-run --auto-servernum npm run test:desktop
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-build
+          path: out/
+  companion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew build --console=plain
+        working-directory: companion
+      - uses: actions/upload-artifact@v4
+        with:
+          name: companion-forge-1.20.1
+          path: companion/build/libs/*.jar

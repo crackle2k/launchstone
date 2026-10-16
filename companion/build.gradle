@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '6.0.54'
+}
+
+group = 'dev.launchstone'
+version = '0.1.0+mc1.20.1-forge'
+base { archivesName = 'launchstone-companion' }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    runs {
+        server {
+            workingDirectory project.file('run')
+            args '--nogui'
+            mods { launchstone { source sourceSets.main } }
+        }
+    }
+}
+
+repositories { mavenCentral() }
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.0'
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+tasks.named('test', Test) { useJUnitPlatform() }
+tasks.named('jar', Jar) {
+    manifest { attributes('Implementation-Version': project.version, 'Launchstone-Protocol-Version': '1') }
+    finalizedBy 'reobfJar'
+}
