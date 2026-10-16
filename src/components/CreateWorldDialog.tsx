@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Box, X, ShieldCheck, LoaderCircle, Plus } from 'lucide-react'
+import { X, ShieldCheck, LoaderCircle, Plus } from 'lucide-react'
+import { WorldIcon } from './WorldArt'
 import { DEFAULT_ENVIRONMENT, type CreateWorld } from '../../shared/contracts'
 
 export default function CreateWorldDialog({
   busy,
+  error,
   onClose,
   onCreate,
 }: {
   busy: boolean
+  error?: string | null
   onClose: () => void
   onCreate: (input: CreateWorld) => Promise<void>
 }) {
@@ -52,11 +55,16 @@ export default function CreateWorldDialog({
           <X size={20} />
         </button>
         <span className="modal-icon">
-          <Box size={26} />
+          <WorldIcon />
         </span>
-        <div className="eyebrow">EVERY ADVENTURE NEEDS A HOME</div>
+        <div className="eyebrow">NEW WORLD PROFILE</div>
         <h2 id="create-title">Create your world</h2>
         <p>Start with a profile. Bring your server files next.</p>
+        {error && (
+          <div className="message error" role="alert">
+            {error}
+          </div>
+        )}
         <form onSubmit={submit}>
           <label>
             World name

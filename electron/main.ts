@@ -99,7 +99,7 @@ function createWindow() {
     height: 860,
     minWidth: 1000,
     minHeight: 700,
-    backgroundColor: '#101411',
+    backgroundColor: '#17181b',
     title: 'Launchstone',
     autoHideMenuBar: true,
     webPreferences: {

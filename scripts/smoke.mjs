@@ -41,7 +41,19 @@ try {
   await page
     .getByRole('heading', { name: 'Make room for a new world.' })
     .waitFor()
+  await page.evaluate(() => document.fonts.ready)
+  assert(
+    await page.evaluate(() => document.fonts.check('13px "Inter Variable"')),
+  )
+  if (process.env.LAUNCHSTONE_SCREENSHOT)
+    await page.screenshot({
+      path: process.env.LAUNCHSTONE_SCREENSHOT.replace('.png', '-empty.png'),
+    })
   await page.getByRole('button', { name: 'Create your first world' }).click()
+  if (process.env.LAUNCHSTONE_SCREENSHOT)
+    await page.screenshot({
+      path: process.env.LAUNCHSTONE_SCREENSHOT.replace('.png', '-dialog.png'),
+    })
   await page
     .getByRole('textbox', { name: 'World name' })
     .fill('The weekend world')
@@ -60,6 +72,10 @@ try {
   }, installation)
   await page.getByRole('button', { name: 'Import Forge server' }).click()
   await page.getByRole('button', { name: 'Start hosting' }).waitFor()
+  if (process.env.LAUNCHSTONE_SCREENSHOT)
+    await page.screenshot({
+      path: process.env.LAUNCHSTONE_SCREENSHOT.replace('.png', '-detail.png'),
+    })
   await page.getByRole('button', { name: 'Checkpoints', exact: true }).click()
   await page.getByRole('button', { name: 'Save checkpoint' }).click()
   await page.getByText('Saved locally', { exact: true }).waitFor()
@@ -80,6 +96,41 @@ try {
   })
   assert(rejected)
   assert.deepEqual(errors, [])
+  await page.getByRole('button', { name: 'All worlds', exact: true }).click()
+  await page
+    .getByRole('textbox', { name: 'Search worlds' })
+    .fill('no matching world')
+  await page
+    .getByRole('heading', { name: 'No worlds found', exact: true })
+    .waitFor()
+  await page.getByRole('button', { name: 'Clear search' }).click()
+  await page.getByRole('button', { name: 'Running 0', exact: true }).click()
+  await page
+    .getByRole('heading', { name: 'No worlds found', exact: true })
+    .waitFor()
+  await page.getByRole('button', { name: 'Show all worlds' }).click()
+  await page.getByRole('button', { name: 'List view', exact: true }).click()
+  assert.equal(
+    await page
+      .getByRole('button', { name: 'List view', exact: true })
+      .getAttribute('aria-pressed'),
+    'true',
+  )
+  await page
+    .getByRole('button', { name: 'Open The weekend world', exact: true })
+    .waitFor()
+  if (process.env.LAUNCHSTONE_SCREENSHOT)
+    await page.screenshot({
+      path: process.env.LAUNCHSTONE_SCREENSHOT.replace('.png', '-list.png'),
+    })
+  await page.getByRole('button', { name: 'Settings', exact: true }).click()
+  await page
+    .getByRole('heading', { name: 'Java runtime', exact: true })
+    .waitFor()
+  if (process.env.LAUNCHSTONE_SCREENSHOT)
+    await page.screenshot({
+      path: process.env.LAUNCHSTONE_SCREENSHOT.replace('.png', '-settings.png'),
+    })
   await desktop.close()
   desktop = await launch()
   page = await desktop.firstWindow()
@@ -97,8 +148,29 @@ try {
       path: process.env.LAUNCHSTONE_SCREENSHOT,
       fullPage: true,
     })
+  await page.setViewportSize({ width: 1000, height: 700 })
+  assert(
+    await page.evaluate(() => {
+      const content = document.querySelector('.content')
+      return content && content.scrollWidth <= content.clientWidth
+    }),
+    'The world library must fit the smallest supported window width',
+  )
+  await page
+    .getByRole('button', { name: 'Create a world', exact: true })
+    .click()
+  const dialog = await page.getByRole('dialog').boundingBox()
+  assert(
+    dialog &&
+      dialog.x >= 0 &&
+      dialog.y >= 0 &&
+      dialog.x + dialog.width <= 1000 &&
+      dialog.y + dialog.height <= 700,
+  )
+  await page.keyboard.press('Escape')
+  await page.getByRole('dialog').waitFor({ state: 'hidden' })
   console.log(
-    'Electron smoke passed: create, import, checkpoint, IPC validation, and persistence across restart.',
+    'Electron smoke passed: create, import, checkpoint, IPC validation, search, filters, list view, settings, bundled font, and persistence across restart.',
   )
 } finally {
   await desktop?.close()
